@@ -6,7 +6,7 @@ default: $(TARGET)
 all: default
 
 %.pdf: %.tex
-	pdflatex $<
+	pdflatex -shell-escape $<
 	rm -rf *.aux *.nav *.out *.snm *.toc *.vrb *.log *.bib
 
 clean:

@@ -6,6 +6,8 @@
 \usepackage{tabularx}
 \usepackage{amssymb}% http://ctan.org/pkg/amssymb
 \usepackage{pifont}
+\usepackage{siunitx}
+\usepackage{minted}
 
 % short cut for tick and cross commands
 \newcommand{\yes}{\checkmark}
@@ -75,6 +77,142 @@
 % - Prototypes r1 2 and 3 (next to each other?)
 % - VCVrack screen capture
 % - 2x video demos
+
+\begin{frame}{Outline}
+
+    % BRIEF: who am I? / side project
+
+    \begin{itemize}
+        \item What is Eurorack?
+        \item Why \texttt{eurorack-pmod}?
+        \item Hardware details
+        \item Writing \& simulating gateware
+        \item Interest, manufacturing \& rev. 3
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{What is eurorack?}
+
+    \begin{itemize}
+        \item Modular system for constructing synthesizers.
+        \item $>15,000$ modules, $>1,000$ different manufacturers.
+    \end{itemize}
+
+    % INSERT PICTURE (my system)
+
+    % Routed manually by mono 3.5mm TS phono jacks
+
+\end{frame}
+
+\begin{frame}{A typical module}
+
+    \begin{itemize}
+        \item Modules have \textbf{input} and \textbf{output} jacks.
+        \item Maximum 10V signals on \textbf{$3.5$mm mono jacks}
+    \end{itemize}
+
+    % INSERT PICTURE (module close-up with connector)
+
+\end{frame}
+
+\begin{frame}{Signals in the Eurorack world}
+
+    \begin{block}{Control Voltages}
+        \begin{itemize}
+            \item Generally lower frequency (roughly $<1$kHz)
+            \item DC absolute accuracy is important (1V/oct)
+            \item \textbf{example:} drum trigger, oscillator pitch
+        \end{itemize}
+    \end{block}
+
+    % INSERT PICTURE (scope capture: CV)
+
+\end{frame}
+
+\begin{frame}{Signals in the Eurorack world}
+
+    \begin{block}{Audio Signals}
+        \begin{itemize}
+            \item Generally higher frequency
+            \item Absolute accuracy not so important
+            \item \textbf{example:} echo or distortion effect.
+        \end{itemize}
+    \end{block}
+
+    % INSERT PICTURE (scope capture: audio)
+
+\end{frame}
+
+% RELATED EXISTING MODULES (do I need this?)
+
+\begin{frame}{}
+
+    \begin{center}
+        \includegraphics[height=3cm]{img/eurorack-pmod.jpg}
+    \end{center}
+
+    \begin{block}{What is \texttt{eurorack-pmod}?}
+        % The hard work is already done.
+        \begin{itemize}
+            \item Easy way to get started with FPGAs \& audio synthesis.
+            \item PMOD connector compatible with many FPGA dev boards.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Why?}
+        \begin{itemize}
+            % SAY \item Hardware, CODEC driver, calibration etc. already done.
+            \item Start prototyping interesting logic straight away.
+            \item Easily do things that are hard on MCU-based platforms.
+                \begin{itemize}
+                    \item e.g. super fast latency, tonnes of VCOs, gate-level sim of retro synth
+                \end{itemize}
+            \item Even for simple things, fun playground to learn FPGAs!
+        \end{itemize}
+    \end{block}
+
+    % INSERT PICTURE (scope capture: audio)
+\end{frame}
+
+\begin{frame}{The hardware}
+
+    % INSERT PICTURE (scope capture: audio)
+
+    \begin{center}
+        \includegraphics[height=3cm]{img/eurorack-pmod.jpg}
+    \end{center}
+
+    \begin{itemize}
+        \item 4HP eurorack-compatible module with PMOD interface.
+        \item 8 (4 in + 4 out) DC-coupled channels with LED indicators.
+        \item 192KHz / 32bit sampling on all channels.
+    \end{itemize}
+
+\end{frame}
+
+% INSERT PICTURE (Connected to ICEbreaker)
+
+\begin{frame}[fragile]
+
+    \textbf{Voltage-Controlled Amplifier}
+
+    \begin{minted}[highlightlines={12},highlightcolor=yellow]{verilog}
+module vca #(
+    parameter W = 16
+)(
+    input signed [W-1:0] sample_in0,
+    ...
+    output signed [W-1:0] sample_out0,
+    ...
+);
+
+assign sample_out0 = (sample_in0 * sample_in1) >>> W;
+
+endmodule
+    \end{minted}
+
+\end{frame}
 
 \begin{frame}{Outline}
 
