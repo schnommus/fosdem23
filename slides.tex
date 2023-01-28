@@ -94,12 +94,17 @@
 
 \begin{frame}{What is eurorack?}
 
+
+    % INSERT PICTURE (my system)
+
+    \begin{center}
+        \includegraphics[height=6cm]{img/my_system.png}
+    \end{center}
+
     \begin{itemize}
         \item Modular system for constructing synthesizers.
         \item $>15,000$ modules, $>1,000$ different manufacturers.
     \end{itemize}
-
-    % INSERT PICTURE (my system)
 
     % Routed manually by mono 3.5mm TS phono jacks
 
@@ -128,6 +133,10 @@
 
     % INSERT PICTURE (scope capture: CV)
 
+    \begin{center}
+        \includegraphics[height=4cm]{img/scope_cv.png}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Signals in the Eurorack world}
@@ -141,6 +150,10 @@
     \end{block}
 
     % INSERT PICTURE (scope capture: audio)
+
+    \begin{center}
+        \includegraphics[height=4cm]{img/scope_audio.png}
+    \end{center}
 
 \end{frame}
 
@@ -279,9 +292,21 @@ endmodule
 
 \end{frame}
 
-\begin{frame}{Input to output latency}
+\begin{frame}{chasing latency}
 
     % INSERT picture of input to output latency
+
+    \begin{center}
+        \includegraphics[height=5.5cm]{img/latency_scope1.png}
+    \end{center}
+
+    \begin{itemize}
+        \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
+        \begin{itemize}
+            \item Likely internal CODEC filter or DAC/ADC pipelining.
+        \end{itemize}
+        \item also pictured: \texttt{disting mk3} (digital precision adder)
+    \end{itemize}
 
 \end{frame}
 
@@ -315,6 +340,10 @@ endmodule
 \begin{frame}{Light bleed through PCB}
 
     % INSERT picture of LED indicators from a couple angles
+
+    \begin{center}
+        \includegraphics[height=5cm]{img/litup.png}
+    \end{center}
 
 \end{frame}
 
