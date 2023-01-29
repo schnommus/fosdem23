@@ -111,6 +111,12 @@
 \end{frame}
 
 \begin{frame}{A typical module}
+    \begin{figure}
+       \centering
+       \raisebox{-0.5\height}{\includegraphics[height=5cm]{img/litup_insystem_cropped.png}}
+       \hspace{1cm}
+       \raisebox{-0.5\height}{\includegraphics[height=3cm]{img/phono.png}}
+    \end{figure}
 
     \begin{itemize}
         \item Modules have \textbf{input} and \textbf{output} jacks.
@@ -185,10 +191,27 @@
 
 \end{frame}
 
-\begin{frame}{Connected to an FPGA}
+\begin{frame}{iCEBreaker}
 
-% INSERT PICTURE (Connected to ICEbreaker)
-% INSERT PICTURE (Connected to ICEbreaker, in system)
+\begin{center}
+    \includegraphics[height=6cm]{img/icebreaker.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{iCESugar Nano}
+
+\begin{center}
+    \includegraphics[height=6cm]{img/icesugar_nano.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Gitter i9}
+
+\begin{center}
+    \includegraphics[height=6cm]{img/gitter_i9.png}
+\end{center}
 
 \end{frame}
 
@@ -232,7 +255,7 @@ endmodule
     % INSERT PICTURE (hardware: top down, maybe labeled)
 
     \begin{center}
-        \includegraphics[height=3cm]{img/eurorack-pmod.jpg}
+        \includegraphics[height=5cm]{img/topdown_labelled.png}
     \end{center}
 
     \begin{itemize}
@@ -248,6 +271,10 @@ endmodule
 
     % INSERT 3 generations
 
+    \begin{center}
+        \includegraphics[height=5cm]{img/oldrevs.png}
+    \end{center}
+
     \begin{itemize}
         \item KiCAD files available on GitHub.
         \item Rev. 2.2 works without any bodges.
@@ -259,6 +286,10 @@ endmodule
 
     % INSERT AK4619VN datasheet capture
     % OR INSERT schematic capture
+
+    \begin{center}
+        \includegraphics[height=4cm]{img/ak4619_chip.png}
+    \end{center}
 
     \begin{block}{AK4619VN audio codec IC}
         \begin{itemize}
@@ -281,6 +312,10 @@ endmodule
         \item Calibrate all samples online in FPGA gateware
         % script is provided to do this (but ideally would do during mfg.)
     \end{itemize}
+
+    \begin{center}
+        \includegraphics[height=4cm]{img/datasheet_ac_coupling.png}
+    \end{center}
 
 \end{frame}
 
@@ -310,6 +345,16 @@ endmodule
 
 \end{frame}
 
+\begin{frame}{Light bleed through PCB}
+
+    % INSERT picture of LED indicators from a couple angles
+
+    \begin{center}
+        \includegraphics[height=5cm]{img/led_guide.png}
+    \end{center}
+
+\end{frame}
+
 \begin{frame}{Simulation - VCVRack}
 
     \begin{center}
@@ -326,6 +371,10 @@ endmodule
 
 \begin{frame}{Manufacturing}
 
+    \begin{center}
+        \includegraphics[height=4cm]{img/mfg_stack.png}
+    \end{center}
+
     \begin{block}{Revision 3 hardware}
         \begin{itemize}
             \item Jack insertion detection
@@ -334,16 +383,6 @@ endmodule
             \item Cheaper to manufacture \& lower profile
         \end{itemize}
     \end{block}
-
-\end{frame}
-
-\begin{frame}{Light bleed through PCB}
-
-    % INSERT picture of LED indicators from a couple angles
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/litup.png}
-    \end{center}
 
 \end{frame}
 
