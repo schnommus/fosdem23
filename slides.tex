@@ -85,8 +85,8 @@
     \begin{itemize}
         \item What is Eurorack?
         \item Why \texttt{eurorack-pmod}?
-        \item Hardware details
         \item Writing \& simulating gateware
+        \item Hardware details
         \item Interest, manufacturing \& rev. 3
     \end{itemize}
 
@@ -113,7 +113,7 @@
 \begin{frame}{A typical module}
     \begin{figure}
        \centering
-       \raisebox{-0.5\height}{\includegraphics[height=5cm]{img/litup_insystem_cropped.png}}
+       \raisebox{-0.5\height}{\includegraphics[height=3cm]{img/plaits_jacks.png}}
        \hspace{1cm}
        \raisebox{-0.5\height}{\includegraphics[height=3cm]{img/phono.png}}
     \end{figure}
@@ -168,7 +168,7 @@
 \begin{frame}{What is \texttt{eurorack-pmod}?}
 
     \begin{center}
-        \includegraphics[height=3cm]{img/eurorack-pmod.jpg}
+        \includegraphics[height=4cm]{img/backview.png}
     \end{center}
 
     % The hard work is already done.
@@ -176,18 +176,6 @@
         \item Easy way to get started with FPGAs \& audio synthesis.
         \item PMOD connector compatible with many FPGA dev boards.
     \end{itemize}
-
-    \begin{block}{Why?}
-        \begin{itemize}
-            % SAY \item Hardware, CODEC driver, calibration etc. already done.
-            \item Start prototyping interesting logic straight away.
-            \item Easily do things that are hard on MCU-based platforms.
-                \begin{itemize}
-                    \item e.g. super fast latency, tonnes of VCOs, gate-level sim of retro synth
-                \end{itemize}
-            \item Even for simple things, fun playground to learn FPGAs!
-        \end{itemize}
-    \end{block}
 
 \end{frame}
 
@@ -215,16 +203,43 @@
 
 \end{frame}
 
+\begin{frame}{Why \texttt{eurorack-pmod}?}
+
+    \begin{center}
+        \includegraphics[height=4cm]{img/frontconndof.png}
+    \end{center}
+
+    \begin{itemize}
+        \item Hardware, CODEC driver, calibration etc. already done.
+        \item Start prototyping interesting logic straight away.
+        \item Easily do things that are hard on MCU-based platforms.
+            \begin{itemize}
+                \item e.g. super fast latency, tonnes of VCOs, gate-level sim of retro synth
+            \end{itemize}
+        \item Even for simple things, fun playground to learn FPGAs!
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Gateware architecture}
+
+    \begin{center}
+        \includegraphics[height=6cm]{img/gateware-arch.png}
+    \end{center}
+
+\end{frame}
+
 \begin{frame}{Gateware examples in \texttt{eurorack-pmod} repository}
 
     \begin{itemize}
         \item \texttt{vca.sv}: voltage controlled amplifier
         \item \texttt{vco.sv}: voltage controlled (wavetable) oscillator
         \item \texttt{sampler.sv}: simple .wav file sampler
-        \item \texttt{filter.sv}: high-pass \& low-pass filter
+        \item \texttt{filter.sv}: high-pass, low-pass filter
         \item \texttt{clkdiv.sv}: clock divider
         \item \texttt{seqswitch.sv}: sequential routing switch
         \item \texttt{bitcrush.sv}: sample bit depth reducer
+        \item \texttt{delay.sv}: digital delay effect
     \end{itemize}
 
 \end{frame}
@@ -247,6 +262,38 @@ assign sample_out0 = (sample_in0 * sample_in1) >>> W;
 
 endmodule
     \end{minted}
+
+\end{frame}
+
+\begin{frame}{chasing latency}
+
+    % INSERT picture of input to output latency
+
+    \begin{center}
+        \includegraphics[height=5.5cm]{img/latency_scope1.png}
+    \end{center}
+
+    \begin{itemize}
+        \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
+        \begin{itemize}
+            \item Likely internal CODEC filter or DAC/ADC pipelining.
+        \end{itemize}
+        \item also pictured: \texttt{disting mk3} (digital precision adder)
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Simulation - VCVRack}
+
+    \begin{center}
+        \includegraphics[height=5cm]{img/vcvrack.png}
+    \end{center}
+
+    \begin{itemize}
+        \item No hardware?
+        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
+        \item \texttt{github.com/schnommus/verilog-vcvrack}
+    \end{itemize}
 
 \end{frame}
 
@@ -319,32 +366,6 @@ endmodule
 
 \end{frame}
 
-\begin{frame}{Gateware architecture}
-
-    \begin{center}
-        \includegraphics[height=6cm]{img/gateware-arch.png}
-    \end{center}
-
-\end{frame}
-
-\begin{frame}{chasing latency}
-
-    % INSERT picture of input to output latency
-
-    \begin{center}
-        \includegraphics[height=5.5cm]{img/latency_scope1.png}
-    \end{center}
-
-    \begin{itemize}
-        \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
-        \begin{itemize}
-            \item Likely internal CODEC filter or DAC/ADC pipelining.
-        \end{itemize}
-        \item also pictured: \texttt{disting mk3} (digital precision adder)
-    \end{itemize}
-
-\end{frame}
-
 \begin{frame}{Light bleed through PCB}
 
     % INSERT picture of LED indicators from a couple angles
@@ -352,20 +373,6 @@ endmodule
     \begin{center}
         \includegraphics[height=5cm]{img/led_guide.png}
     \end{center}
-
-\end{frame}
-
-\begin{frame}{Simulation - VCVRack}
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/vcvrack.png}
-    \end{center}
-
-    \begin{itemize}
-        \item No hardware?
-        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
-        \item \texttt{github.com/schnommus/verilog-vcvrack}
-    \end{itemize}
 
 \end{frame}
 
@@ -388,21 +395,27 @@ endmodule
 
 \begin{frame}{Thank you for listening!}
 
+    \begin{center}
+        \includegraphics[height=2cm]{img/eurorack-pmod.jpg}
+    \end{center}
+
     \begin{itemize}
         \item contact: \texttt{me@sebholzapfel.com}
         \item \texttt{github.com/schnommus/eurorack-pmod}
         \item \texttt{github.com/schnommus/verilog-vcvrack}
     \end{itemize}
 
-    \begin{block}{Help needed!}
+    \begin{block}{Help! Should I do a manufacturing run?}
         \begin{itemize}
-            \item Is a prototype run worthwhile?
-            \begin{itemize}
-                \item star the GitHub repository :)
-                \item register interest in `Manufacturing' section of \texttt{README.md}
-            \end{itemize}
+            \item Star the GitHub repository
+            \item Sign up in `Manufacturing' section of \texttt{README.md}
         \end{itemize}
     \end{block}
+
+    \begin{itemize}
+        \item Huge credit to Icestorm / Yosys / 1BitSquared / everyone making open-source FPGA toolchains and development platforms possible.
+    \end{itemize}
+    % Thank you to Icestorm / Yosys / 1BitSquared / Silvain Munaut.
 
 \end{frame}
 
