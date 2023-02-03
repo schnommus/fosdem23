@@ -12,6 +12,7 @@
 % short cut for tick and cross commands
 \newcommand{\yes}{\checkmark}
 \newcommand{\no}{\hspace{1pt}\ding{55}}
+\newcommand{\mycomment}[1]{}
 
 \usepackage[scale=2]{ccicons}
 
@@ -129,41 +130,33 @@
 
 \end{frame}
 
-\begin{frame}{Signals in the Eurorack world}
+%   \begin{frame}{Signals in the Eurorack world}
+%       \begin{block}{Control Voltages}
+%           \begin{itemize}
+%               \item Generally lower frequency (roughly $<1$kHz)
+%               \item DC absolute accuracy is important (1V/oct)
+%               \item \textbf{example:} drum trigger, oscillator pitch
+%           \end{itemize}
+%       \end{block}
+%       % INSERT PICTURE (scope capture: CV)
+%       \begin{center}
+%           \includegraphics[height=4cm]{img/scope_cv.png}
+%       \end{center}
+%   \end{frame}
 
-    \begin{block}{Control Voltages}
-        \begin{itemize}
-            \item Generally lower frequency (roughly $<1$kHz)
-            \item DC absolute accuracy is important (1V/oct)
-            \item \textbf{example:} drum trigger, oscillator pitch
-        \end{itemize}
-    \end{block}
-
-    % INSERT PICTURE (scope capture: CV)
-
-    \begin{center}
-        \includegraphics[height=4cm]{img/scope_cv.png}
-    \end{center}
-
-\end{frame}
-
-\begin{frame}{Signals in the Eurorack world}
-
-    \begin{block}{Audio Signals}
-        \begin{itemize}
-            \item Generally higher frequency
-            \item Absolute accuracy not so important
-            \item \textbf{example:} echo or distortion effect.
-        \end{itemize}
-    \end{block}
-
-    % INSERT PICTURE (scope capture: audio)
-
-    \begin{center}
-        \includegraphics[height=4cm]{img/scope_audio.png}
-    \end{center}
-
-\end{frame}
+%   \begin{frame}{Signals in the Eurorack world}
+%       \begin{block}{Audio Signals}
+%           \begin{itemize}
+%               \item Generally higher frequency
+%               \item Absolute accuracy not so important
+%               \item \textbf{example:} echo or distortion effect.
+%           \end{itemize}
+%       \end{block}
+%       % INSERT PICTURE (scope capture: audio)
+%       \begin{center}
+%           \includegraphics[height=4cm]{img/scope_audio.png}
+%       \end{center}
+%   \end{frame}
 
 % RELATED EXISTING MODULES (do I need this?)
 
@@ -189,21 +182,17 @@
 
 \end{frame}
 
-\begin{frame}{iCESugar Nano}
+%   \begin{frame}{iCESugar Nano}
+%   \begin{center}
+%       \includegraphics[height=6cm]{img/icesugar_nano.png}
+%   \end{center}
+%   \end{frame}
 
-\begin{center}
-    \includegraphics[height=6cm]{img/icesugar_nano.png}
-\end{center}
-
-\end{frame}
-
-\begin{frame}{Gitter i9}
-
-\begin{center}
-    \includegraphics[height=6cm]{img/gitter_i9.png}
-\end{center}
-
-\end{frame}
+%   \begin{frame}{Gitter i9}
+%   \begin{center}
+%       \includegraphics[height=6cm]{img/gitter_i9.png}
+%   \end{center}
+%   \end{frame}
 
 \begin{frame}{Why \texttt{eurorack-pmod}?}
 
@@ -419,6 +408,13 @@ endmodule
     \end{itemize}
     % Thank you to Icestorm / Yosys / 1BitSquared / Silvain Munaut.
 
+\end{frame}
+
+\begin{frame}{Demo video links}
+    \begin{itemize}
+        \item No ads: \texttt{github.com/schnommus/fosdem23} - `vid' folder.
+        \item Alternatively: \texttt{https://youtu.be/vUoyLuF32Wk}, \texttt{https://youtu.be/UmG0CRECmTg}
+    \end{itemize}
 \end{frame}
 
 \end{document}
