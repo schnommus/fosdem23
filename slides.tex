@@ -81,36 +81,54 @@
 
 % TIMING issues and bad code can be musically interesting
 
-\begin{frame}{Outline}
+%   \begin{frame}{Outline}
+%       % BRIEF: who am I? / side project
+%       \begin{itemize}
+%           \item What is Eurorack?
+%           \item Why \texttt{eurorack-pmod}?
+%           \item Writing \& simulating gateware
+%           \item Hardware details
+%           \item Interest, manufacturing \& rev. 3
+%       \end{itemize}
+%   \end{frame}
 
-    % BRIEF: who am I? / side project
+\begin{frame}{}
+    \begin{center}
+        \includegraphics[height=3cm]{img/backview.png}
+    \end{center}
+    % The hard work is already done.
+    \begin{block}{Motivation}
+        \begin{itemize}
+            \item Easy way to get started with FPGAs \& audio synthesis.
+            \item \textbf{PMOD interface}: de facto standard (FPGA dev board expansion).
+            \item \textbf{Eurorack}: de facto standard (modular synthesis hardware).
+        \end{itemize}
+    \end{block}
+    \begin{block}{This project}
+        \begin{itemize}
+            \item Open hardware design for eurorack-compatible PMOD.
+            \item Open gateware design with all drivers + example cores.
+            \item Testbenches + simulation so you can play even without hardware.
+        \end{itemize}
+    \end{block}
+\end{frame}
 
-    \begin{itemize}
-        \item What is Eurorack?
-        \item Why \texttt{eurorack-pmod}?
-        \item Writing \& simulating gateware
-        \item Hardware details
-        \item Interest, manufacturing \& rev. 3
-    \end{itemize}
-
+\begin{frame}{iCEBreaker (from 1BitSquared) / PMOD}
+    \begin{center}
+        \includegraphics[height=6cm]{img/icebreaker.png}
+    \end{center}
 \end{frame}
 
 \begin{frame}{What is eurorack?}
-
-
     % INSERT PICTURE (my system)
-
     \begin{center}
         \includegraphics[height=6cm]{img/my_system.png}
     \end{center}
-
     \begin{itemize}
         \item Modular system for constructing synthesizers.
         \item $>15,000$ modules, $>1,000$ different manufacturers.
     \end{itemize}
-
     % Routed manually by mono 3.5mm TS phono jacks
-
 \end{frame}
 
 \begin{frame}{A typical module}
@@ -120,14 +138,18 @@
        \hspace{1cm}
        \raisebox{-0.5\height}{\includegraphics[height=3cm]{img/phono.png}}
     \end{figure}
-
     \begin{itemize}
         \item Modules have \textbf{input} and \textbf{output} jacks.
         \item Maximum $\pm$10V signals on \textbf{$3.5$mm mono jacks}
     \end{itemize}
-
     % INSERT PICTURE (module close-up with connector)
+\end{frame}
 
+\begin{frame}{Demo video}
+    \begin{itemize}
+        \item also uploaded here: \texttt{github.com/schnommus/fosdem23} - `vid' folder.
+        %\item Alternatively: \texttt{https://youtu.be/vUoyLuF32Wk}, \texttt{https://youtu.be/UmG0CRECmTg}
+    \end{itemize}
 \end{frame}
 
 %   \begin{frame}{Signals in the Eurorack world}
@@ -160,28 +182,6 @@
 
 % RELATED EXISTING MODULES (do I need this?)
 
-\begin{frame}{What is \texttt{eurorack-pmod}?}
-
-    \begin{center}
-        \includegraphics[height=4cm]{img/backview.png}
-    \end{center}
-
-    % The hard work is already done.
-    \begin{itemize}
-        \item Easy way to get started with FPGAs \& audio synthesis.
-        \item PMOD connector compatible with many FPGA dev boards.
-    \end{itemize}
-
-\end{frame}
-
-\begin{frame}{iCEBreaker}
-
-\begin{center}
-    \includegraphics[height=6cm]{img/icebreaker.png}
-\end{center}
-
-\end{frame}
-
 %   \begin{frame}{iCESugar Nano}
 %   \begin{center}
 %       \includegraphics[height=6cm]{img/icesugar_nano.png}
@@ -194,12 +194,10 @@
 %   \end{center}
 %   \end{frame}
 
-\begin{frame}{Why \texttt{eurorack-pmod}?}
-
+\begin{frame}{What can you do with \texttt{eurorack-pmod}?}
     \begin{center}
         \includegraphics[height=4cm]{img/frontconndof.png}
     \end{center}
-
     \begin{itemize}
         \item Hardware, CODEC driver, calibration etc. already done.
         \item Start prototyping interesting logic straight away.
@@ -209,19 +207,68 @@
             \end{itemize}
         \item Even for simple things, fun playground to learn FPGAs!
     \end{itemize}
-
 \end{frame}
 
-\begin{frame}{Gateware architecture}
+\begin{frame}{The hardware}
+    % INSERT PICTURE (hardware: top down, maybe labeled)
+    \begin{center}
+        \includegraphics[height=5cm]{img/topdown_labelled.png}
+    \end{center}
+    \begin{itemize}
+        \item 4HP eurorack-compatible module with PMOD interface.
+        \item 8 (4 in + 4 out) DC-coupled channels with LED indicators.
+        \item 192KHz / 32bit sampling on all channels.
+    \end{itemize}
+\end{frame}
 
+\begin{frame}{Hardware design}
+    % INSERT 3 generations
+    \begin{center}
+        \includegraphics[height=5cm]{img/oldrevs.png}
+    \end{center}
+    \begin{itemize}
+        \item KiCAD files available on GitHub.
+        \item Rev. 2.2 works without any bodges.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Deeper - Audio CODEC}
+    % INSERT AK4619VN datasheet capture
+    % OR INSERT schematic capture
+    \begin{center}
+        \includegraphics[height=4cm]{img/ak4619_chip.png}
+    \end{center}
+    \begin{block}{AK4619VN audio codec IC}
+        \begin{itemize}
+            \item All 8 channels on a single I2S-like interface (fits in 1x PMOD)
+            \item Much cheaper than instrumentation-quality ADCs/DACs (\$3/unit)
+            \item \textbf{Can be misused in a DC-coupled mode, if calibration used}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{DC coupling and calibration}
+    % INSERT compare input topology
+    \begin{itemize}
+        \item Ignore recommended input/output topology from datasheet
+        \item Disable all digital high-pass filters in CODEC registers
+        \item Calibrate DC extents at $\pm$ 5V, linear regression
+        \item Calibrate all samples online in FPGA gateware
+        % script is provided to do this (but ideally would do during mfg.)
+    \end{itemize}
+    \begin{center}
+        \includegraphics[height=4cm]{img/datasheet_ac_coupling.png}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{Gateware architecture}
     \begin{center}
         \includegraphics[height=6cm]{img/gateware-arch.png}
     \end{center}
-
 \end{frame}
 
 \begin{frame}{Gateware examples in \texttt{eurorack-pmod} repository}
-
     \begin{itemize}
         \item \texttt{vca.sv}: voltage controlled amplifier
         \item \texttt{vco.sv}: voltage controlled (wavetable) oscillator
@@ -232,7 +279,6 @@
         \item \texttt{bitcrush.sv}: sample bit depth reducer
         \item \texttt{delay.sv}: digital delay effect
     \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -256,14 +302,13 @@ endmodule
 
 \end{frame}
 
+% Blah blah blah using DMA this would be difficult
+
 \begin{frame}{chasing latency}
-
     % INSERT picture of input to output latency
-
     \begin{center}
         \includegraphics[height=5.5cm]{img/latency_scope1.png}
     \end{center}
-
     \begin{itemize}
         \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
         \begin{itemize}
@@ -271,108 +316,20 @@ endmodule
         \end{itemize}
         \item also pictured: \texttt{disting mk3} (digital precision adder)
     \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Simulation - VCVRack}
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/vcvrack.png}
-    \end{center}
-
-    \begin{itemize}
-        \item No hardware?
-        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
-        \item \texttt{github.com/schnommus/verilog-vcvrack}
-    \end{itemize}
-
-\end{frame}
-
-\begin{frame}{The hardware}
-
-    % INSERT PICTURE (hardware: top down, maybe labeled)
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/topdown_labelled.png}
-    \end{center}
-
-    \begin{itemize}
-        \item 4HP eurorack-compatible module with PMOD interface.
-        \item 8 (4 in + 4 out) DC-coupled channels with LED indicators.
-        \item 192KHz / 32bit sampling on all channels.
-    \end{itemize}
-
 \end{frame}
 
 
-\begin{frame}{Hardware design}
-
-    % INSERT 3 generations
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/oldrevs.png}
-    \end{center}
-
-    \begin{itemize}
-        \item KiCAD files available on GitHub.
-        \item Rev. 2.2 works without any bodges.
-    \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Deeper - Audio CODEC}
-
-    % INSERT AK4619VN datasheet capture
-    % OR INSERT schematic capture
-
-    \begin{center}
-        \includegraphics[height=4cm]{img/ak4619_chip.png}
-    \end{center}
-
-    \begin{block}{AK4619VN audio codec IC}
-        \begin{itemize}
-            \item All 8 channels on a single I2S-like interface (fits in 1x PMOD)
-            \item Much cheaper than instrumentation-quality ADCs/DACs (\$3/unit)
-            \item \textbf{Can be misused in a DC-coupled mode, if calibration used}
-        \end{itemize}
-    \end{block}
-
-\end{frame}
-
-\begin{frame}{DC coupling and calibration}
-
-    % INSERT compare input topology
-
-    \begin{itemize}
-        \item Ignore recommended input/output topology from datasheet
-        \item Disable all digital high-pass filters in CODEC registers
-        \item Calibrate DC extents at $\pm$ 5V, linear regression
-        \item Calibrate all samples online in FPGA gateware
-        % script is provided to do this (but ideally would do during mfg.)
-    \end{itemize}
-
-    \begin{center}
-        \includegraphics[height=4cm]{img/datasheet_ac_coupling.png}
-    \end{center}
-
-\end{frame}
-
-\begin{frame}{Light bleed through PCB}
-
-    % INSERT picture of LED indicators from a couple angles
-
-    \begin{center}
-        \includegraphics[height=5cm]{img/led_guide.png}
-    \end{center}
-
-\end{frame}
+%   \begin{frame}{Light bleed through PCB}
+%       % INSERT picture of LED indicators from a couple angles
+%       \begin{center}
+%           \includegraphics[height=5cm]{img/led_guide.png}
+%       \end{center}
+%   \end{frame}
 
 \begin{frame}{Manufacturing}
-
     \begin{center}
         \includegraphics[height=4cm]{img/mfg_stack.png}
     \end{center}
-
     \begin{block}{Revision 3 hardware}
         \begin{itemize}
             \item Jack insertion detection
@@ -381,13 +338,23 @@ endmodule
             \item Cheaper to manufacture \& lower profile
         \end{itemize}
     \end{block}
+\end{frame}
 
+\begin{frame}{Simulation - VCVRack}
+    \begin{center}
+        \includegraphics[height=5cm]{img/vcvrack.png}
+    \end{center}
+    \begin{itemize}
+        \item No hardware?
+        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
+        \item \texttt{github.com/schnommus/verilog-vcvrack}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Thank you for listening!}
 
     \begin{center}
-        \includegraphics[height=2cm]{img/eurorack-pmod.jpg}
+        \includegraphics[height=2cm]{img/mfg_stack.png}
     \end{center}
 
     \begin{itemize}
@@ -408,13 +375,6 @@ endmodule
     \end{itemize}
     % Thank you to Icestorm / Yosys / 1BitSquared / Silvain Munaut.
 
-\end{frame}
-
-\begin{frame}{Demo video links}
-    \begin{itemize}
-        \item No ads: \texttt{github.com/schnommus/fosdem23} - `vid' folder.
-        \item Alternatively: \texttt{https://youtu.be/vUoyLuF32Wk}, \texttt{https://youtu.be/UmG0CRECmTg}
-    \end{itemize}
 \end{frame}
 
 \end{document}
