@@ -100,23 +100,18 @@
     \begin{block}{Motivation}
         \begin{itemize}
             \item Easy way to get started with FPGAs \& audio synthesis.
-            \item \textbf{PMOD interface}: de facto standard (FPGA dev board expansion).
             \item \textbf{Eurorack}: de facto standard (modular synthesis hardware).
+            \item \textbf{PMOD interface}: de facto standard (FPGA dev board expansion).
+            % Couldn't find anything that combines these 2 worlds.
         \end{itemize}
     \end{block}
     \begin{block}{This project}
         \begin{itemize}
             \item Open hardware design for eurorack-compatible PMOD.
-            \item Open gateware design with all drivers + example cores.
+            \item Open gateware design with drivers / calibration / examples.
             \item Testbenches + simulation so you can play even without hardware.
         \end{itemize}
     \end{block}
-\end{frame}
-
-\begin{frame}{iCEBreaker (from 1BitSquared) / PMOD}
-    \begin{center}
-        \includegraphics[height=6cm]{img/icebreaker.png}
-    \end{center}
 \end{frame}
 
 \begin{frame}{What is eurorack?}
@@ -145,48 +140,29 @@
     % INSERT PICTURE (module close-up with connector)
 \end{frame}
 
+\begin{frame}{iCEBreaker (from 1BitSquared) / PMOD}
+    \begin{center}
+        \includegraphics[height=6cm]{img/icebreaker.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{iCESugar Nano / PMOD}
+\begin{center}
+    \includegraphics[height=6cm]{img/icesugar_nano.png}
+\end{center}
+\end{frame}
+
+
 \begin{frame}{Demo video}
     \begin{itemize}
-        \item also uploaded here: \texttt{github.com/schnommus/fosdem23} - `vid' folder.
+        \item See: \texttt{github.com/schnommus/fosdem23}.
+        \item File: \texttt{vid/vco-trim.mov}: eurorack-pmod acting as voltage controlled oscillator, routed through low pass filter and ADSR. Finally side-chain compressed against kick and mixed with a random granular sampler.
+        \item File: \texttt{vid/seqsw-trim.mov}: eurorack-pmod acting as a sequential switch, randomly routing different inputs to different outputs based on a clock source. Inputs to the module are a wavetable VCO and output side-chain compressed against a kick.
         %\item Alternatively: \texttt{https://youtu.be/vUoyLuF32Wk}, \texttt{https://youtu.be/UmG0CRECmTg}
     \end{itemize}
 \end{frame}
 
-%   \begin{frame}{Signals in the Eurorack world}
-%       \begin{block}{Control Voltages}
-%           \begin{itemize}
-%               \item Generally lower frequency (roughly $<1$kHz)
-%               \item DC absolute accuracy is important (1V/oct)
-%               \item \textbf{example:} drum trigger, oscillator pitch
-%           \end{itemize}
-%       \end{block}
-%       % INSERT PICTURE (scope capture: CV)
-%       \begin{center}
-%           \includegraphics[height=4cm]{img/scope_cv.png}
-%       \end{center}
-%   \end{frame}
-
-%   \begin{frame}{Signals in the Eurorack world}
-%       \begin{block}{Audio Signals}
-%           \begin{itemize}
-%               \item Generally higher frequency
-%               \item Absolute accuracy not so important
-%               \item \textbf{example:} echo or distortion effect.
-%           \end{itemize}
-%       \end{block}
-%       % INSERT PICTURE (scope capture: audio)
-%       \begin{center}
-%           \includegraphics[height=4cm]{img/scope_audio.png}
-%       \end{center}
-%   \end{frame}
-
 % RELATED EXISTING MODULES (do I need this?)
-
-%   \begin{frame}{iCESugar Nano}
-%   \begin{center}
-%       \includegraphics[height=6cm]{img/icesugar_nano.png}
-%   \end{center}
-%   \end{frame}
 
 %   \begin{frame}{Gitter i9}
 %   \begin{center}
@@ -209,7 +185,68 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{The hardware}
+\begin{frame}{Gateware examples in \texttt{eurorack-pmod} repository}
+    \begin{itemize}
+        \item \texttt{vca.sv}: voltage controlled amplifier
+        \item \texttt{vco.sv}: voltage controlled (wavetable) oscillator
+        \item \texttt{sampler.sv}: simple .wav file sampler
+        \item \texttt{filter.sv}: high-pass, low-pass filter
+        \item \texttt{clkdiv.sv}: clock divider
+        \item \texttt{seqswitch.sv}: sequential routing switch
+        \item \texttt{bitcrush.sv}: sample bit depth reducer
+        \item \texttt{delay.sv}: digital delay effect
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+
+    \textbf{Voltage-Controlled Amplifier (SystemVerilog)}
+
+    \begin{minted}[highlightlines={10},highlightcolor=yellow]{verilog}
+module vca #(
+    parameter W = 16
+)(
+    input signed [W-1:0] sample_in0,
+    ...
+    output signed [W-1:0] sample_out0,
+    ...
+);
+
+assign sample_out0 = (sample_in0 * sample_in1) >>> W;
+
+endmodule
+    \end{minted}
+
+\end{frame}
+
+% Blah blah blah using DMA this would be difficult
+
+\begin{frame}{Chasing latency}
+    % INSERT picture of input to output latency
+    \begin{center}
+        \includegraphics[height=5.5cm]{img/latency_scope1.png}
+    \end{center}
+    \begin{itemize}
+        \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
+        \begin{itemize}
+            \item Likely internal CODEC filter or DAC/ADC pipelining.
+        \end{itemize}
+        \item also pictured: \texttt{disting mk3} (digital precision adder)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Hardware evolution}
+    % INSERT 3 generations
+    \begin{center}
+        \includegraphics[height=5cm]{img/oldrevs.png}
+    \end{center}
+    \begin{itemize}
+        \item KiCAD files available on GitHub.
+        \item Rev. 2.2 works without any bodges.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Hardware overview}
     % INSERT PICTURE (hardware: top down, maybe labeled)
     \begin{center}
         \includegraphics[height=5cm]{img/topdown_labelled.png}
@@ -218,17 +255,6 @@
         \item 4HP eurorack-compatible module with PMOD interface.
         \item 8 (4 in + 4 out) DC-coupled channels with LED indicators.
         \item 192KHz / 32bit sampling on all channels.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Hardware design}
-    % INSERT 3 generations
-    \begin{center}
-        \includegraphics[height=5cm]{img/oldrevs.png}
-    \end{center}
-    \begin{itemize}
-        \item KiCAD files available on GitHub.
-        \item Rev. 2.2 works without any bodges.
     \end{itemize}
 \end{frame}
 
@@ -261,70 +287,21 @@
     \end{center}
 \end{frame}
 
-
 \begin{frame}{Gateware architecture}
     \begin{center}
         \includegraphics[height=6cm]{img/gateware-arch.png}
     \end{center}
 \end{frame}
 
-\begin{frame}{Gateware examples in \texttt{eurorack-pmod} repository}
-    \begin{itemize}
-        \item \texttt{vca.sv}: voltage controlled amplifier
-        \item \texttt{vco.sv}: voltage controlled (wavetable) oscillator
-        \item \texttt{sampler.sv}: simple .wav file sampler
-        \item \texttt{filter.sv}: high-pass, low-pass filter
-        \item \texttt{clkdiv.sv}: clock divider
-        \item \texttt{seqswitch.sv}: sequential routing switch
-        \item \texttt{bitcrush.sv}: sample bit depth reducer
-        \item \texttt{delay.sv}: digital delay effect
-    \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-
-    \textbf{Voltage-Controlled Amplifier}
-
-    \begin{minted}[highlightlines={10},highlightcolor=yellow]{verilog}
-module vca #(
-    parameter W = 16
-)(
-    input signed [W-1:0] sample_in0,
-    ...
-    output signed [W-1:0] sample_out0,
-    ...
-);
-
-assign sample_out0 = (sample_in0 * sample_in1) >>> W;
-
-endmodule
-    \end{minted}
-
-\end{frame}
-
-% Blah blah blah using DMA this would be difficult
-
-\begin{frame}{chasing latency}
-    % INSERT picture of input to output latency
+\begin{frame}{No hardware? - VCVRack}
     \begin{center}
-        \includegraphics[height=5.5cm]{img/latency_scope1.png}
+        \includegraphics[height=5cm]{img/vcvrack.png}
     \end{center}
     \begin{itemize}
-        \item \texttt{eurorack-pmod}: about 120uS latency (24 samples @ 192KHz)
-        \begin{itemize}
-            \item Likely internal CODEC filter or DAC/ADC pipelining.
-        \end{itemize}
-        \item also pictured: \texttt{disting mk3} (digital precision adder)
+        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
+        \item \texttt{github.com/schnommus/verilog-vcvrack}
     \end{itemize}
 \end{frame}
-
-
-%   \begin{frame}{Light bleed through PCB}
-%       % INSERT picture of LED indicators from a couple angles
-%       \begin{center}
-%           \includegraphics[height=5cm]{img/led_guide.png}
-%       \end{center}
-%   \end{frame}
 
 \begin{frame}{Manufacturing}
     \begin{center}
@@ -340,21 +317,10 @@ endmodule
     \end{block}
 \end{frame}
 
-\begin{frame}{Simulation - VCVRack}
-    \begin{center}
-        \includegraphics[height=5cm]{img/vcvrack.png}
-    \end{center}
-    \begin{itemize}
-        \item No hardware?
-        \item VCVRack plugin to \textbf{simulate verilog on a \texttt{eurorack-pmod} module}.
-        \item \texttt{github.com/schnommus/verilog-vcvrack}
-    \end{itemize}
-\end{frame}
-
 \begin{frame}{Thank you for listening!}
 
     \begin{center}
-        \includegraphics[height=2cm]{img/mfg_stack.png}
+        \includegraphics[height=3cm]{img/mfg_stack.png}
     \end{center}
 
     \begin{itemize}
@@ -370,11 +336,47 @@ endmodule
         \end{itemize}
     \end{block}
 
-    \begin{itemize}
-        \item Huge credit to Icestorm / Yosys / 1BitSquared / everyone making open-source FPGA toolchains and development platforms possible.
-    \end{itemize}
+    %\begin{itemize}
+    %    \item Huge credit to Icestorm / Yosys / 1BitSquared / everyone making open-source FPGA toolchains and development platforms possible.
+    %\end{itemize}
     % Thank you to Icestorm / Yosys / 1BitSquared / Silvain Munaut.
 
 \end{frame}
+
+\begin{frame}{Backup: Light bleed through PCB}
+    % INSERT picture of LED indicators from a couple angles
+    \begin{center}
+        \includegraphics[height=5cm]{img/led_guide.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Backup: Signals in Eurorack}
+    \begin{block}{Control Voltages}
+        \begin{itemize}
+            \item Generally lower frequency (roughly $<1$kHz)
+            \item DC absolute accuracy is important (1V/oct)
+            \item \textbf{example:} drum trigger, oscillator pitch
+        \end{itemize}
+    \end{block}
+    % INSERT PICTURE (scope capture: CV)
+    \begin{center}
+        \includegraphics[height=4cm]{img/scope_cv.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Backup: Signals in Eurorack}
+    \begin{block}{Audio Signals}
+        \begin{itemize}
+            \item Generally higher frequency
+            \item Absolute accuracy not so important
+            \item \textbf{example:} echo or distortion effect.
+        \end{itemize}
+    \end{block}
+    % INSERT PICTURE (scope capture: audio)
+    \begin{center}
+        \includegraphics[height=4cm]{img/scope_audio.png}
+    \end{center}
+\end{frame}
+
 
 \end{document}
